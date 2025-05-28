@@ -116,7 +116,10 @@ function updateTheme() {
         theme = 'hare';
         themeTitle.style.color = 'var(--hare-primary)';
     }
-    setVideoTileBackgrounds(theme);
+    // Only set backgrounds if we're not in a call
+    if (!hostVideoTrack) {
+        setVideoTileBackgrounds(theme);
+    }
     addFloatingSVGs(theme);
 }
 
@@ -201,6 +204,11 @@ updateConfigBtn.addEventListener('click', async () => {
             if (!hostVideoTrack.isPlaying) {
                 localVideo.innerHTML = '';
                 hostVideoTrack.play(localVideo);
+            }
+            // Replay remote video if it exists
+            if (remoteVideoTrack && !remoteVideoTrack.isPlaying) {
+                remoteVideo.innerHTML = '';
+                remoteVideoTrack.play(remoteVideo);
             }
         }, 300);
         updateConfigBtn.textContent = 'Updated!';
