@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolution Run - Agora Custom Resolution Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://download.agora.io/sdk/release/AgoraRTC_N.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8">
+            <div class="flex items-center justify-between bg-white rounded-lg shadow-md p-4">
+                <h1 class="text-2xl font-bold" id="themeTitle">Resolution Run: Custom Resolution Demo</h1>
+            </div>
+        </header>
+
+        <div class="flex items-center space-x-4 mb-8">
+            <img src="https://cdn.prod.website-files.com/660affa848e8af81bdd03909/66ab7f671fb90c022fb7f1dc_Agora%20Logo%20Crisp-p-500.png" alt="Agora Logo" class="h-8 cursor-pointer" id="agoraLogo">
+        </div>
+
+        <div id="settingsMenu" class="hidden bg-white rounded-lg shadow-md p-4 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-4">
+                    <div>
+                        <label for="appId" class="block text-sm font-medium text-gray-700">App ID</label>
+                        <input type="text" id="appId" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="channelName" class="block text-sm font-medium text-gray-700">Channel Name</label>
+                        <input type="text" id="channelName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label for="token" class="block text-sm font-medium text-gray-700">Token (Optional)</label>
+                        <input type="text" id="token" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="uid" class="block text-sm font-medium text-gray-700">UID (Optional)</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="text" id="uid" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="stringUid" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                <label for="stringUid" class="ml-2 block text-sm text-gray-700">String UID</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+                <label for="cameraSelect" class="block text-sm font-medium text-gray-700">Camera</label>
+                <select id="cameraSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base py-2"></select>
+            </div>
+            <div>
+                <label for="micSelect" class="block text-sm font-medium text-gray-700">Microphone</label>
+                <select id="micSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base py-2"></select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div class="space-y-4">
+                <div>
+                    <label for="width" class="block text-sm font-medium text-gray-700">Width</label>
+                    <input type="number" id="width" value="1280" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="height" class="block text-sm font-medium text-gray-700">Height</label>
+                    <input type="number" id="height" value="720" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label for="framerate" class="block text-sm font-medium text-gray-700">Framerate</label>
+                    <input type="number" id="framerate" value="24" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="bitrate" class="block text-sm font-medium text-gray-700">Bitrate</label>
+                    <input type="number" id="bitrate" value="1500" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center space-x-4 mb-8">
+            <button id="joinBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Join</button>
+            <button id="leaveBtn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" disabled>Leave</button>
+            <button id="updateConfigBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Update Config</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="relative">
+                <div id="localVideo" class="w-full aspect-video bg-gray-800 rounded-lg"></div>
+                <div id="localStats" class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 rounded-b-lg"></div>
+            </div>
+            <div class="relative">
+                <div id="remoteVideo" class="w-full aspect-video bg-gray-800 rounded-lg"></div>
+                <div id="remoteStats" class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 rounded-b-lg"></div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html> 

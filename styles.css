@@ -1,0 +1,247 @@
+/* Theme Variables */
+:root {
+    --tortoise-primary: #2E7D32;  /* Green */
+    --tortoise-secondary: #81C784;  /* Light Green */
+    --tortoise-bg: #e8f5e9;
+    --hare-primary: #D32F2F;  /* Red */
+    --hare-secondary: #EF9A9A;  /* Light Red */
+    --hare-bg: #fff3f3;
+}
+
+/* Theme-specific styles */
+body.tortoise-theme {
+    --theme-primary: var(--tortoise-primary);
+    --theme-secondary: var(--tortoise-secondary);
+    background: var(--tortoise-bg) url('https://upload.wikimedia.org/wikipedia/commons/5/5e/Tortoise_cartoon.svg') no-repeat right bottom/200px auto;
+}
+
+body.hare-theme {
+    --theme-primary: var(--hare-primary);
+    --theme-secondary: var(--hare-secondary);
+    background: var(--hare-bg) url('https://upload.wikimedia.org/wikipedia/commons/7/7e/Rabbit_cartoon_04.svg') no-repeat right bottom/200px auto;
+}
+
+/* Custom styles for inputs and buttons */
+input[type="text"],
+input[type="number"] {
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    background: #fff;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border-color: var(--theme-primary);
+    box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
+    outline: none;
+}
+
+button {
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+}
+
+#joinBtn {
+    background-color: var(--theme-primary) !important;
+    color: white !important;
+}
+
+#joinBtn:hover {
+    background-color: var(--theme-secondary) !important;
+}
+
+#leaveBtn {
+    background-color: var(--hare-primary) !important;
+    color: white !important;
+}
+
+#leaveBtn:hover {
+    background-color: var(--hare-secondary) !important;
+}
+
+/* Stats overlay styles */
+#localStats,
+#remoteStats {
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+/* Animation for theme transition */
+body {
+    transition: background 0.5s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--theme-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-secondary);
+}
+
+/* Video container styles */
+#localVideo,
+#remoteVideo {
+    background-color: #1f2937;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    min-height: 320px;
+    min-width: 100px;
+    position: relative;
+    border: 4px dashed var(--theme-primary);
+    animation: border-glow 2s infinite alternate;
+    transition: border-color 0.5s;
+}
+
+body.hare-theme #localVideo, body.hare-theme #remoteVideo {
+    border: 4px solid var(--hare-primary);
+    animation: border-glow-hare 2s infinite alternate;
+}
+body.tortoise-theme #localVideo, body.tortoise-theme #remoteVideo {
+    border: 4px solid var(--tortoise-primary);
+    animation: border-glow-tortoise 2s infinite alternate;
+}
+
+@keyframes border-glow-hare {
+    0% { box-shadow: 0 0 8px 2px var(--hare-secondary); }
+    100% { box-shadow: 0 0 24px 8px var(--hare-primary); }
+}
+@keyframes border-glow-tortoise {
+    0% { box-shadow: 0 0 8px 2px var(--tortoise-secondary); }
+    100% { box-shadow: 0 0 24px 8px var(--tortoise-primary); }
+}
+
+#localStats,
+#remoteStats {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    padding: 0.7em 1em 0.7em 1em;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    font-size: 1rem;
+    z-index: 2;
+    pointer-events: none;
+    font-family: 'Fredoka', Arial, sans-serif;
+    transition: background 0.5s;
+}
+
+.video-badge {
+    background: rgba(255,255,255,0.85);
+    border-radius: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    padding: 0.2em 0.7em;
+    font-size: 2rem;
+    font-family: 'Fredoka', Arial, sans-serif;
+    font-weight: bold;
+    animation: badge-pop 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+    user-select: none;
+    pointer-events: none;
+}
+@keyframes badge-pop {
+    0% { transform: scale(0.2) rotate(-30deg); opacity: 0; }
+    60% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.stats-label {
+    font-family: 'Fredoka', Arial, sans-serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--theme-primary);
+    margin-bottom: 0.2em;
+}
+
+/* Animation for theme transition */
+body {
+    font-family: 'Fredoka', Arial, sans-serif;
+    transition: background 0.5s ease;
+}
+
+/* Logo styles */
+#agoraLogo {
+    transition: transform 0.3s ease;
+}
+
+#agoraLogo:hover {
+    transform: scale(1.1);
+}
+
+header {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+}
+
+#themeTitle {
+    font-family: 'Fredoka', Arial, sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+    transition: color 0.5s;
+}
+
+/* Floating SVGs */
+.floating-svg {
+    pointer-events: none;
+    opacity: 0.7;
+    z-index: 0;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.12));
+}
+@keyframes floaty-move-0 {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-40px) scale(1.1) rotate(8deg); }
+}
+@keyframes floaty-move-1 {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(60px) scale(0.95) rotate(-8deg); }
+}
+@keyframes floaty-move-2 {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-30px) scale(1.05) rotate(4deg); }
+}
+
+/* Confetti/particles */
+.confetti {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+}
+.confetti-piece {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    opacity: 0.7;
+    animation: confetti-fall 4s linear infinite;
+}
+@keyframes confetti-fall {
+    0% { transform: translateY(-20px) scale(1); }
+    100% { transform: translateY(100vh) scale(0.7); }
+}
+
+/* Subtle transitions for overlays and theme */
+#localStats, #remoteStats, .video-badge {
+    transition: background 0.5s, color 0.5s, box-shadow 0.5s;
+} 
