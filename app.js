@@ -37,12 +37,39 @@ async function getDevices() {
         const devices = await AgoraRTC.getDevices();
         const audioDevices = devices.filter(device => device.kind === 'audioinput');
         const videoDevices = devices.filter(device => device.kind === 'videoinput');
-        micSelect.innerHTML = audioDevices.map(device => 
-            `<option value="${device.deviceId}">${device.label || `Microphone ${device.deviceId}`}</option>`
-        ).join('');
-        cameraSelect.innerHTML = videoDevices.map(device => 
-            `<option value="${device.deviceId}">${device.label || `Camera ${device.deviceId}`}</option>`
-        ).join('');
+        
+        // Clear existing options
+        micSelect.innerHTML = '';
+        cameraSelect.innerHTML = '';
+        
+        // Add devices to select elements
+        audioDevices.forEach(device => {
+            const option = document.createElement('option');
+            option.value = device.deviceId;
+            option.text = device.label || `Microphone ${device.deviceId}`;
+            micSelect.appendChild(option);
+        });
+        
+        videoDevices.forEach(device => {
+            const option = document.createElement('option');
+            option.value = device.deviceId;
+            option.text = device.label || `Camera ${device.deviceId}`;
+            cameraSelect.appendChild(option);
+        });
+
+        // Store the first camera as default if none selected
+        if (!cameraSelect.value && videoDevices.length > 0) {
+            cameraSelect.value = videoDevices[0].deviceId;
+        }
+
+        // Store the first mic as default if none selected
+        if (!micSelect.value && audioDevices.length > 0) {
+            micSelect.value = audioDevices[0].deviceId;
+        }
+
+        console.log('Available video devices:', videoDevices.map(d => ({ id: d.deviceId, label: d.label })));
+        console.log('Selected camera:', cameraSelect.value);
+        console.log('Camera select options:', Array.from(cameraSelect.options).map(o => ({ value: o.value, text: o.text })));
     } catch (error) {
         console.error("Error getting devices:", error);
     }
@@ -50,22 +77,54 @@ async function getDevices() {
 
 // Create local tracks using selected devices and encoder config
 async function createLocalTracksWithDevicesAndConfig() {
-    const selectedMic = micSelect.value;
     const selectedCamera = cameraSelect.value;
-    [hostAudioTrack, hostVideoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks(
-        { deviceId: selectedMic },
-        { deviceId: selectedCamera }
-    );
-    // Set encoder config immediately after creation
+    
+    if (!selectedCamera) {
+        throw new Error('No camera selected');
+    }
+    
+    console.log('Creating tracks with camera:', selectedCamera);
+
     try {
-        await hostVideoTrack.setEncoderConfiguration({
-            width: parseInt(widthInput.value),
-            height: parseInt(heightInput.value),
-            frameRate: parseInt(framerateInput.value),
-            bitrateMax: parseInt(bitrateInput.value)
-        });
+        // Get current devices to verify camera is still available
+        const devices = await AgoraRTC.getDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        console.log('Current available video devices:', videoDevices.map(d => ({ id: d.deviceId, label: d.label })));
+        
+        // Verify selected camera is still in the list
+        const cameraExists = videoDevices.some(device => device.deviceId === selectedCamera);
+        if (!cameraExists) {
+            console.warn('Selected camera no longer available, using first available camera');
+            cameraSelect.value = videoDevices[0].deviceId;
+        }
+
+        // Create both audio and video tracks together
+        [hostAudioTrack, hostVideoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks(
+            {
+                encoderConfig: {
+                    bitrate: 48,
+                    stereo: false,
+                    sampleRate: 48000
+                },
+                deviceId: micSelect.value
+            },
+            {
+                encoderConfig: {
+                    width: parseInt(widthInput.value),
+                    height: parseInt(heightInput.value),
+                    frameRate: parseInt(framerateInput.value),
+                    bitrateMax: parseInt(bitrateInput.value)
+                },
+                cameraId: cameraSelect.value,
+                facingMode: "user",
+                optimizationMode: "detail"
+            }
+        );
+        
     } catch (e) {
+        console.error('Error creating tracks:', e);
         alert('The selected resolution/framerate/bitrate is not supported by your camera. Please try different values.');
+        throw e;
     }
 }
 
@@ -240,12 +299,12 @@ async function joinChannel() {
     try {
         await initializeAgoraClients();
         await hostClient.join(appId, channelName, token, isStringUid ? uid : (uid ? parseInt(uid) : null));
-        // Ensure device info is up to date and permissions are granted
-        await AgoraRTC.getCameras();
-        await AgoraRTC.getMicrophones();
-        // Small delay to ensure device list is ready
-        await new Promise(res => setTimeout(res, 200));
+        
+        await new Promise(res => setTimeout(res, 200)); // Small delay to ensure device list is ready
+        
+        // Create tracks with selected devices
         await createLocalTracksWithDevicesAndConfig();
+        
         await hostClient.publish([hostAudioTrack, hostVideoTrack]);
         localVideo.innerHTML = '';
         localVideo.style.background = '';
@@ -394,7 +453,7 @@ function addFloatingSVGs(theme) {
 }
 
 // Event Listeners
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     agoraLogo.addEventListener('click', () => {
         settingsMenu.classList.toggle('hidden');
     });
@@ -406,7 +465,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize
     updateTheme();
-    getDevices();
+    await getDevices(); // Wait for devices to be loaded before allowing join
+    
     // Add input click listeners for floating SVGs and confetti
     document.querySelectorAll('input,select').forEach(el => {
         el.addEventListener('click', () => {
