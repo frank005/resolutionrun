@@ -392,10 +392,10 @@ function updateStatsDisplay(element, stats, isLocal) {
             Capture FPS: ${stats.captureFrameRate}<br>
             Send Resolution: ${stats.sendResolutionWidth}x${stats.sendResolutionHeight}<br>           
             Send FPS: ${stats.sendFrameRate}<br>
-            Bitrate: ${Math.round(stats.sendBitrate)} kbps<br>
+            Bitrate: ${(stats.sendBitrate / 1000).toFixed(1)} kbps<br>
             Packet Loss: $${stats.currentPacketLossRate}%<br>
             Encode Delay: ${stats.encodeDelay}ms<br>
-            Jitter: ${stats.sendJitterMs}ms<br>
+            Jitter: ${stats.sendJitterMs.toFixed(3)}ms<br>
             RTT: ${stats.sendRttMs}ms<br>
             Codec: ${stats.codecType}>br>
             Total Freeze Time: ${stats.totalFreezeTime}s
@@ -407,10 +407,10 @@ function updateStatsDisplay(element, stats, isLocal) {
             Receive FPS: ${stats.receiveFrameRate}<br>
             Decode FPS: ${stats.decodeFrameRate}<br>
             Render FPS: ${stats.renderFrameRate}<br>
-            Bitrate: ${Math.round(stats.receiveBitrate)} kbps<br>
-            Delay: ${stats.receiveDelay}ms<br>
+            Bitrate: ${(stats.receiveBitrate / 1000).toFixed(1)} kbps<br>
+            Delay: ${stats.receiveDelay.toFixed(2)}ms<br>
             Packets Lost: ${stats.receivePacketsLost}<br>
-            E2E Delay: ${stats.end2EndDelay}ms<br>
+            E2E Delay: ${stats.end2EndDelay} ms<br>
             Transport Delay: ${stats.transportDelay}ms<br>
             Freeze Rate: ${stats.freezeRate}%<br>
             Codec: ${stats.codecType}<br>
