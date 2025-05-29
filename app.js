@@ -456,6 +456,9 @@ function addFloatingSVGs(theme) {
 document.addEventListener('DOMContentLoaded', async () => {
     agoraLogo.addEventListener('click', () => {
         settingsMenu.classList.toggle('hidden');
+        // Hide the arrow permanently after first click
+        const arrow = document.querySelector('.theme-arrow');
+        if (arrow) arrow.style.display = 'none';
     });
 
     widthInput.addEventListener('input', updateTheme);

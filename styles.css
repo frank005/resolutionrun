@@ -259,4 +259,66 @@ header {
 
 .octicon {
     fill: currentColor;
+}
+
+/* Theme Arrow */
+.theme-arrow {
+    position: absolute;
+    left: 108%; /* just to the right of the logo */
+    top: 50%; /* vertically center with logo */
+    width: 44px;
+    height: 24px;
+    pointer-events: none;
+    transform: translateY(-50%) rotate(0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: arrow-bounce 2s ease-in-out infinite;
+    z-index: 2;
+}
+.theme-arrow .arrow-shaft {
+    width: 28px;
+    height: 4px;
+    background: var(--theme-primary);
+    border-radius: 2px;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: background 0.5s;
+}
+.theme-arrow .arrow-head {
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid var(--theme-primary);
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: border-left-color 0.5s;
+}
+.theme-arrow::before, .theme-arrow::after { display: none; }
+
+@keyframes arrow-bounce {
+    0%, 100% {
+        transform: translateY(-50%) rotate(180deg) translateX(-100px);
+    }
+    50% {
+        transform: translateY(-50%) rotate(180deg) translateX(-22px) scale(2);
+    }
+}
+
+body.tortoise-theme .theme-arrow .arrow-shaft {
+    background: var(--tortoise-primary);
+}
+body.hare-theme .theme-arrow .arrow-shaft {
+    background: var(--hare-primary);
+}
+body.tortoise-theme .theme-arrow .arrow-head {
+    border-left-color: var(--tortoise-primary);
+}
+body.hare-theme .theme-arrow .arrow-head {
+    border-left-color: var(--hare-primary);
 } 
