@@ -388,14 +388,17 @@ function updateStatsDisplay(element, stats, isLocal) {
     if (isLocal) {
         html = `
             <div class='stats-label'>Local Stats</div>
-            Resolution: ${stats.sendResolutionWidth}x${stats.sendResolutionHeight}<br>
-            FPS: ${stats.sendFrameRate}<br>
-            Bitrate: ${Math.round(stats.sendBitrate)} kbps<br>
-            Packet Loss: ${stats.packetLossRate}%<br>
+            Capture Resolution: ${stats.captureResolutionWidth}x${stats.captureResolutionHeight}<br>
             Capture FPS: ${stats.captureFrameRate}<br>
+            Send Resolution: ${stats.sendResolutionWidth}x${stats.sendResolutionHeight}<br>           
+            Send FPS: ${stats.sendFrameRate}<br>
+            Bitrate: ${Math.round(stats.sendBitrate)} kbps<br>
+            Packet Loss: $${stats.currentPacketLossRate}%<br>
             Encode Delay: ${stats.encodeDelay}ms<br>
             Jitter: ${stats.sendJitterMs}ms<br>
-            RTT: ${stats.sendRttMs}ms
+            RTT: ${stats.sendRttMs}ms<br>
+            Codec: ${stats.codecType}>br>
+            Total Freeze Time: ${stats.totalFreezeTime}s
         `;
     } else {
         html = `
@@ -410,6 +413,7 @@ function updateStatsDisplay(element, stats, isLocal) {
             E2E Delay: ${stats.end2EndDelay}ms<br>
             Transport Delay: ${stats.transportDelay}ms<br>
             Freeze Rate: ${stats.freezeRate}%<br>
+            Codec: ${stats.codecType}<br>
             Total Freeze Time: ${stats.totalFreezeTime}s
         `;
     }
