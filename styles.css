@@ -244,4 +244,19 @@ header {
 /* Subtle transitions for overlays and theme */
 #localStats, #remoteStats, .video-badge {
     transition: background 0.5s, color 0.5s, box-shadow 0.5s;
+}
+
+.github-link {
+    display: flex;
+    align-items: center;
+    color: #24292e;
+    transition: transform 0.2s ease;
+}
+
+.github-link:hover {
+    transform: scale(1.1);
+}
+
+.octicon {
+    fill: currentColor;
 } 
